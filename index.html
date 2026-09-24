@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6fa">
+  <meta name="description" content="JARVIS: a visual guide to a wearable navigation glasses prototype and its JARVIS Companion app.">
+  <title>JARVIS — Navigation Glasses Field Guide</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f6fa;
+      --surface: #fff;
+      --ink: #111a2b;
+      --muted: #66748a;
+      --line: #dce3ed;
+      --blue: #2768f5;
+      --blue-soft: #eaf0ff;
+      --navy: #111a2b;
+      --lime: #c7f36b;
+      --radius: 22px;
+      --shadow: 0 20px 55px rgba(25, 43, 77, .08);
+      font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    a { color: inherit; }
+    button { font: inherit; }
+    .skip-link { position: absolute; top: -50px; left: 16px; z-index: 10; padding: 10px 14px; border-radius: 8px; background: white; }
+    .skip-link:focus { top: 12px; }
+    .shell { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-size: 13px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+    .brand-mark { width: 28px; height: 28px; display: grid; place-items: center; color: white; background: var(--blue); border-radius: 9px; font-size: 13px; letter-spacing: 0; }
+    .top-nav { display: flex; gap: 28px; align-items: center; }
+    .top-nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; transition: color .2s ease; }
+    .top-nav a:hover, .top-nav a:focus-visible { color: var(--blue); }
+    .nav-tag { padding: 8px 12px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+    .hero { position: relative; display: flex; align-items: center; justify-content: space-between; margin: 34px 0 72px; min-height: 388px; overflow: hidden; border-radius: 28px; background: var(--navy); color: white; box-shadow: var(--shadow); }
+    .hero::after { content: ""; position: absolute; width: 440px; height: 440px; right: 5%; top: -210px; border: 1px solid rgba(255,255,255,.11); border-radius: 50%; box-shadow: 0 0 0 55px rgba(255,255,255,.025), 0 0 0 110px rgba(255,255,255,.02); pointer-events: none; }
+    .hero-inner { position: relative; z-index: 1; flex: 1; max-width: 720px; padding: 54px 58px 46px; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: #a9b7d0; font-size: 11px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 16px rgba(199,243,107,.8); }
+    h1 { max-width: 620px; margin: 25px 0 16px; font-size: clamp(42px, 6vw, 70px); line-height: .99; letter-spacing: -.055em; font-weight: 720; }
+    .hero-copy { max-width: 490px; color: #c3cddd; font-size: 15px; line-height: 1.7; }
+    .hero-tagline { display: block; margin: 11px 0 12px; color: white; font-size: 18px; font-weight: 650; letter-spacing: -.02em; }
+    .hero-bottom { display: flex; gap: 10px; margin-top: 29px; flex-wrap: wrap; }
+    .hero-pill { padding: 9px 12px; border: 1px solid rgba(255,255,255,.17); border-radius: 99px; color: #e2e8f1; font-size: 11px; }
+    .hero-pill b { color: var(--lime); font-weight: 750; }
+    .hero-index { position: absolute; right: 45px; bottom: 34px; z-index: 1; color: rgba(255,255,255,.36); font-size: 11px; font-weight: 700; letter-spacing: .18em; writing-mode: vertical-rl; }
+    .hero-logo { position: relative; z-index: 1; flex: 0 0 250px; width: 250px; margin: 0 62px 0 10px; padding: 9px; overflow: hidden; border-radius: 17px; background: #fff; box-shadow: 0 15px 40px rgba(0,0,0,.17); }
+    .hero-logo img { display: block; width: 100%; height: auto; border-radius: 10px; }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    .section-kicker { margin: 0 0 9px; color: var(--blue); font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: clamp(28px, 4vw, 39px); line-height: 1.08; letter-spacing: -.04em; }
+    .section-note { max-width: 340px; margin: 0 0 3px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .manual { margin-bottom: 76px; }
+    .manual-grid { display: grid; grid-template-columns: minmax(280px, .78fr) minmax(0, 1.5fr); gap: 18px; align-items: stretch; }
+    .part-panel, .diagram-panel, .flow-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 26px rgba(25,43,77,.035); }
+    .part-panel { padding: 20px; display: flex; flex-direction: column; }
+    .panel-label { margin: 2px 0 14px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .part-list { display: grid; gap: 7px; }
+    .part-card { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px; border: 1px solid transparent; border-radius: 14px; background: transparent; color: var(--ink); text-align: left; cursor: pointer; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+    .part-card:hover { background: #f7f9fd; transform: translateX(2px); }
+    .part-card[aria-pressed="true"] { border-color: #cfdcff; background: var(--blue-soft); }
+    .part-number { flex: 0 0 31px; width: 31px; height: 31px; display: grid; place-items: center; border-radius: 10px; background: #eef1f6; color: #53637b; font-size: 10px; font-weight: 800; }
+    .part-card[aria-pressed="true"] .part-number { background: var(--blue); color: white; }
+    .part-name { display: block; font-size: 12px; font-weight: 750; }
+    .part-kind { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .detail-box { margin-top: auto; padding: 17px 15px; border-radius: 15px; background: #f6f8fc; }
+    .detail-label { color: var(--blue); font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .detail-box h3 { margin: 7px 0 7px; font-size: 17px; letter-spacing: -.025em; }
+    .detail-box p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .detail-meta { display: flex; gap: 7px; align-items: flex-start; margin-top: 12px; padding-top: 11px; border-top: 1px solid #e3e8f0; color: #44536b; font-size: 10px; line-height: 1.5; }
+    .meta-icon { color: var(--blue); font-size: 13px; line-height: 1; }
+
+    .diagram-panel { position: relative; min-width: 0; padding: 18px 20px 14px; overflow: hidden; background: linear-gradient(145deg, #fff 7%, #f8faff 100%); }
+    .diagram-topline { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+    .diagram-topline span:last-child { color: #9aa6b7; }
+    .glasses-svg { display: block; width: 100%; height: auto; min-height: 260px; margin: 8px auto 0; overflow: visible; }
+    .frame { fill: #171f2d; stroke: #101725; stroke-width: 10; stroke-linejoin: round; }
+    .lens { fill: #e7edf6; fill-opacity: .62; stroke: #4e5d72; stroke-width: 5; }
+    .glasses-detail { fill: none; stroke: #344257; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+    .metal { fill: #a8b5c6; stroke: #6a788d; stroke-width: 2; }
+    .sensor-board { fill: #263449; stroke: #73829a; stroke-width: 2; }
+    .sensor-eye { fill: #d8e1ee; stroke: #66758b; stroke-width: 3; }
+    .sensor-core { fill: #98a8bd; }
+    .camera-board { fill: #263449; stroke: #697990; stroke-width: 2; }
+    .camera-lens { fill: #101925; stroke: #99a8bc; stroke-width: 4; }
+    .motor-pod { fill: #dfe7f3; stroke: #77869c; stroke-width: 3; }
+    .marker { cursor: pointer; outline: none; }
+    .marker circle:first-child { fill: var(--blue); stroke: white; stroke-width: 3; transition: transform .18s ease, fill .18s ease; transform-box: fill-box; transform-origin: center; }
+    .marker text { fill: #fff; font-size: 12px; font-family: inherit; font-weight: 800; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .marker:hover circle:first-child, .marker:focus-visible circle:first-child, .marker.active circle:first-child { fill: #151f32; transform: scale(1.18); }
+    .marker:focus-visible circle:first-child { stroke: var(--lime); stroke-width: 5; }
+    .map-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid #e8edf4; color: var(--muted); font-size: 10px; }
+    .map-caption strong { color: var(--ink); font-weight: 700; }
+    .map-legend { display: inline-flex; align-items: center; gap: 7px; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+
+    .flow { margin-bottom: 76px; }
+    .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin-top: 24px; }
+    .flow-card { position: relative; min-height: 180px; padding: 23px 22px; }
+    .flow-card:not(:last-child)::after { content: ""; position: absolute; top: 39px; right: -18px; z-index: 2; width: 22px; height: 1px; background: #b7c4d6; }
+    .flow-num { width: 30px; height: 30px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 10px; background: var(--blue-soft); color: var(--blue); font-size: 10px; font-weight: 850; }
+    .flow-card h3 { margin: 0 0 7px; font-size: 15px; letter-spacing: -.02em; }
+    .flow-card p { max-width: 280px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .flow-detail { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; color: #465774; font-size: 9px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+    .flow-detail::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 3px #f2f8e6; }
+
+    .model { margin-bottom: 76px; }
+    .model-workbench { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(240px, .7fr); overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: white; box-shadow: 0 8px 26px rgba(25,43,77,.035); }
+    .model-stage { min-width: 0; padding: 18px; background: linear-gradient(145deg, #fff 5%, #f2f6fc 100%); }
+    .model-stage-top { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+    .model-stage-top span:last-child { color: #98a4b6; }
+    .model-canvas { display: block; width: 100%; height: 360px; margin: 4px 0 8px; border-radius: 16px; cursor: grab; touch-action: none; }
+    .model-canvas:active { cursor: grabbing; }
+    .model-canvas:focus-visible { outline: 3px solid #8baaff; outline-offset: 2px; }
+    .model-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid #e3e9f1; }
+    .model-control, .model-download { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: white; color: #536178; text-decoration: none; font-size: 10px; font-weight: 750; cursor: pointer; transition: .18s ease; }
+    .model-control:hover, .model-download:hover { border-color: #bdcdf0; color: var(--blue); }
+    .model-control[aria-pressed="true"] { border-color: #cfdcff; background: var(--blue-soft); color: var(--blue); }
+    .model-download.primary { margin-left: auto; border-color: var(--blue); background: var(--blue); color: white; }
+    .model-download.primary:hover { background: #1454da; }
+    .model-info { padding: 25px 22px; border-left: 1px solid var(--line); }
+    .model-info .section-kicker { margin-bottom: 10px; }
+    .model-info h3 { margin: 0 0 11px; font-size: 20px; letter-spacing: -.035em; }
+    .model-info p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .model-specs { display: grid; gap: 0; margin: 21px 0 0; padding: 0; list-style: none; border-top: 1px solid #e7ecf3; }
+    .model-specs li { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid #e7ecf3; color: var(--muted); font-size: 10px; }
+    .model-specs strong { color: var(--ink); text-align: right; font-weight: 700; }
+    .model-file-note { margin-top: 16px !important; padding: 11px 12px; border-radius: 11px; background: #f5f7fb; font-size: 10px !important; }
+    .model-file-note a { color: var(--blue); font-weight: 750; }
+
+    .note { display: flex; gap: 13px; align-items: flex-start; margin: 0 0 38px; padding: 17px 19px; border: 1px solid #dce6f6; border-radius: 16px; background: #edf3ff; color: #465774; font-size: 11px; line-height: 1.6; }
+    .note-symbol { flex: 0 0 22px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: var(--blue); color: white; font-weight: 800; font-size: 12px; }
+    .note p { margin: 0; }
+    .note strong { color: var(--ink); }
+    footer { display: flex; justify-content: space-between; gap: 18px; padding: 22px 0 30px; border-top: 1px solid var(--line); color: #8490a2; font-size: 10px; }
+    footer strong { color: #536078; font-weight: 750; }
+
+    @media (max-width: 850px) {
+      .manual-grid { grid-template-columns: 1fr; }
+      .part-panel { display: block; }
+      .part-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-box { margin-top: 17px; }
+      .hero-inner { max-width: 650px; }
+      .hero-index { right: 22px; }
+      .hero-logo { flex-basis: 205px; width: 205px; margin-right: 32px; }
+      .model-workbench { grid-template-columns: 1fr; }
+      .model-info { border-top: 1px solid var(--line); border-left: 0; }
+    }
+    @media (max-width: 600px) {
+      .shell { width: min(100% - 30px, 1180px); }
+      .topbar { height: 64px; }
+      .top-nav { gap: 14px; }
+      .top-nav a { font-size: 11px; }
+      .top-nav a:nth-child(3) { display: none; }
+      .nav-tag { display: none; }
+      .hero { margin: 20px 0 54px; min-height: 360px; border-radius: 22px; }
+      .hero { display: flex; flex-direction: column; align-items: stretch; }
+      .hero-inner { flex: 0 0 auto; max-width: none; padding: 40px 25px 14px; }
+      h1 { font-size: 48px; }
+      .hero-copy { font-size: 13px; }
+      .hero-index { display: none; }
+      .hero-logo { flex: 0 0 auto; width: 170px; margin: 0 20px 22px auto; padding: 6px; border-radius: 13px; }
+      .section-head { display: block; }
+      .section-note { margin-top: 12px; }
+      .manual, .flow, .model { margin-bottom: 57px; }
+      .part-list { gap: 5px; }
+      .part-card { padding: 8px 7px; gap: 8px; }
+      .part-number { flex-basis: 27px; width: 27px; height: 27px; font-size: 9px; }
+      .part-name { font-size: 10px; }
+      .part-kind { font-size: 9px; }
+      .diagram-panel { padding: 15px 12px 12px; }
+      .glasses-svg { min-height: unset; }
+      .model-stage { padding: 14px 11px; }
+      .model-canvas { height: 285px; }
+      .model-stage-top { font-size: 8px; }
+      .model-controls { gap: 6px; }
+      .model-control, .model-download { min-height: 32px; padding: 0 9px; font-size: 9px; }
+      .flow-grid { grid-template-columns: 1fr; gap: 9px; }
+      .flow-card { min-height: 0; padding: 17px; }
+      .flow-card:not(:last-child)::after { top: auto; right: auto; bottom: -10px; left: 31px; width: 1px; height: 11px; }
+      .flow-num { margin-bottom: 13px; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to guide</a>
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="JARVIS project home"><span class="brand-mark">J</span><span>JARVIS <span style="color:#9aa6b7;font-weight:600">/ Field guide</span></span></a>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="#controls">Components</a>
+      <a href="#model">3D model</a>
+      <a href="#flow">System flow</a>
+      <span class="nav-tag">App · JARVIS Companion</span>
+    </nav>
+  </header>
+
+  <main id="main" class="shell">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> JARVIS · Wearable navigation</div>
+        <h1 id="hero-title">JARVIS</h1>
+        <p class="hero-copy"><span class="hero-tagline">Awareness, at a glance.</span>A quick guide to the glasses prototype: three distance sensors detect nearby obstacles, haptics provide alerts, and a triggered camera can add context. The companion app is called JARVIS Companion.</p>
+        <div class="hero-bottom" aria-label="Project components">
+          <span class="hero-pill"><b>03</b> distance sensors</span>
+          <span class="hero-pill"><b>02</b> vibration motors</span>
+          <span class="hero-pill"><b>01</b> camera module</span>
+        </div>
+      </div>
+      <div class="hero-logo"><img src="JARVIS-logo.png" alt="JARVIS Navigation Identity logo" width="900" height="518"></div>
+      <div class="hero-index" aria-hidden="true">JARVIS · PROJECT FIELD GUIDE · 001</div>
+    </section>
+
+    <section class="manual" id="controls" aria-labelledby="manual-title">
+      <div class="section-head">
+        <div><p class="section-kicker">01 / Component map</p><h2 id="manual-title">Know your hardware.</h2></div>
+        <p class="section-note">Sensors 01 and 03 face out from the sides; sensor 02 points forward from the bridge. Select a marker for details.</p>
+      </div>
+
+      <div class="manual-grid">
+        <aside class="part-panel" aria-label="Glasses components">
+          <p class="panel-label">Choose a component</p>
+          <div class="part-list" role="group" aria-label="Select a glasses component">
+            <button class="part-card" data-part="leftSensor" aria-pressed="true"><span class="part-number">01</span><span><span class="part-name">Left-side sensor</span><span class="part-kind">HC-SR04 · side-facing</span></span></button>
+            <button class="part-card" data-part="centerSensor" aria-pressed="false"><span class="part-number">02</span><span><span class="part-name">Forward sensor</span><span class="part-kind">HC-SR04 · front-facing</span></span></button>
+            <button class="part-card" data-part="rightSensor" aria-pressed="false"><span class="part-number">03</span><span><span class="part-name">Right-side sensor</span><span class="part-kind">HC-SR04 · side-facing</span></span></button>
+            <button class="part-card" data-part="leftMotor" aria-pressed="false"><span class="part-number">04</span><span><span class="part-name">Left vibrator</span><span class="part-kind">Coin motor · haptic</span></span></button>
+            <button class="part-card" data-part="rightMotor" aria-pressed="false"><span class="part-number">05</span><span><span class="part-name">Right vibrator</span><span class="part-kind">Coin motor · haptic</span></span></button>
+            <button class="part-card" data-part="camera" aria-pressed="false"><span class="part-number">06</span><span><span class="part-name">ESP32-CAM</span><span class="part-kind">Camera · recognition</span></span></button>
+          </div>
+          <div class="detail-box" aria-live="polite" aria-atomic="true">
+            <span class="detail-label" id="detail-label">Distance sensing</span>
+            <h3 id="detail-title">Left-side ultrasonic sensor</h3>
+            <p id="detail-copy">The left-facing HC-SR04 measures how far away an obstacle is. Its distance reading goes to the Arduino Nano.</p>
+            <div class="detail-meta"><span class="meta-icon" aria-hidden="true">↳</span><span id="detail-meta">Side-mounted and aimed left, rather than facing forward.</span></div>
+          </div>
+        </aside>
+
+        <div class="diagram-panel">
+            <div class="diagram-topline"><span>Front view · component locations</span><span>01 / 03 face sideways</span></div>
+          <svg class="glasses-svg" viewBox="0 0 800 390" role="img" aria-labelledby="glasses-title glasses-desc">
+            <title id="glasses-title">Smart navigation glasses component diagram</title>
+            <desc id="glasses-desc">A front view of dark glasses with one forward-facing ultrasonic sensor above the bridge, side-facing ultrasonic sensors on the left and right edges, two vibration motors at the temples, and an ESP32-CAM below the right-side sensor on the viewer's right lens. Select numbered markers for component details.</desc>
+            <defs>
+              <linearGradient id="lensTint" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#dbe5f2"/><stop offset="1" stop-color="#f4f7fb"/></linearGradient>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="13" stdDeviation="12" flood-color="#425575" flood-opacity=".14"/></filter>
+            </defs>
+            <ellipse cx="399" cy="325" rx="298" ry="18" fill="#dce4ef" opacity=".6"/>
+            <g filter="url(#softShadow)">
+              <!-- temples and outer frame -->
+              <path class="glasses-detail" d="M185 153 C132 147 93 147 54 165 L31 178 Q24 182 30 190 L50 208 Q59 216 75 210 L177 184"/>
+              <path class="glasses-detail" d="M622 158 C674 151 718 148 760 163 L779 176 Q786 181 780 188 L761 205 Q753 211 738 207 L630 186"/>
+              <path class="frame" d="M188 134 Q202 117 232 119 L353 122 Q378 123 389 145 L397 160 L405 145 Q417 123 443 122 L565 119 Q596 117 611 135 L622 152 L612 243 Q608 274 579 277 L460 278 Q426 279 414 249 L400 213 L386 249 Q374 279 340 278 L221 277 Q192 274 188 243 L178 152 Z"/>
+              <path d="M204 146 Q213 133 236 135 L350 138 Q367 139 374 155 L379 169 L371 238 Q368 257 346 259 L229 258 Q210 256 207 236 Z" fill="url(#lensTint)" class="lens"/>
+              <path d="M425 169 L432 155 Q439 139 457 138 L568 135 Q591 133 598 146 L595 236 Q591 256 573 258 L456 259 Q434 257 430 238 Z" fill="url(#lensTint)" class="lens"/>
+              <!-- nose bridge and pads -->
+              <path d="M380 161 Q400 148 420 161 L430 179 Q402 167 370 179 Z" fill="#1c2738" stroke="#59687e" stroke-width="4"/>
+              <path d="M385 194 Q374 205 372 220" fill="none" stroke="#7d8ba0" stroke-width="5" stroke-linecap="round"/>
+              <path d="M415 194 Q426 205 428 220" fill="none" stroke="#7d8ba0" stroke-width="5" stroke-linecap="round"/>
+              <!-- one forward-facing ultrasonic board above the bridge -->
+              <g transform="translate(400 134)"><rect class="sensor-board" x="-40" y="-13" width="80" height="40" rx="8"/><circle class="sensor-eye" cx="-19" cy="7" r="14"/><circle class="sensor-eye" cx="19" cy="7" r="14"/><circle class="sensor-core" cx="-19" cy="7" r="6"/><circle class="sensor-core" cx="19" cy="7" r="6"/></g>
+              <!-- side sensors are turned outward; paired eyes appear stacked in this view -->
+              <g transform="translate(174 149) rotate(-90)"><rect class="sensor-board" x="-31" y="-12" width="62" height="24" rx="6"/><circle class="sensor-eye" cx="-15" cy="0" r="10"/><circle class="sensor-eye" cx="15" cy="0" r="10"/><circle class="sensor-core" cx="-15" cy="0" r="4"/><circle class="sensor-core" cx="15" cy="0" r="4"/></g>
+              <g transform="translate(626 149) rotate(90)"><rect class="sensor-board" x="-31" y="-12" width="62" height="24" rx="6"/><circle class="sensor-eye" cx="-15" cy="0" r="10"/><circle class="sensor-eye" cx="15" cy="0" r="10"/><circle class="sensor-core" cx="-15" cy="0" r="4"/><circle class="sensor-core" cx="15" cy="0" r="4"/></g>
+              <path d="M145 167 H119 M119 167 l8 -6 M119 167 l8 6" fill="none" stroke="#2768f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M655 167 H681 M681 167 l-8 -6 M681 167 l-8 6" fill="none" stroke="#2768f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- haptics at the temples -->
+              <rect x="74" y="184" width="40" height="22" rx="9" class="motor-pod"/><path d="M83 195h22" stroke="#8796aa" stroke-width="3" stroke-linecap="round"/>
+              <rect x="686" y="184" width="40" height="22" rx="9" class="motor-pod"/><path d="M695 195h22" stroke="#8796aa" stroke-width="3" stroke-linecap="round"/>
+              <!-- ESP32-CAM on the viewer's right lens, under sensor 03 -->
+              <g transform="translate(546 181)"><rect class="camera-board" x="0" y="0" width="54" height="57" rx="6"/><circle class="camera-lens" cx="27" cy="22" r="13"/><circle cx="27" cy="22" r="5" fill="#5385ff"/><rect x="7" y="42" width="40" height="6" rx="2" fill="#8b9ab0"/></g>
+            </g>
+            <!-- numbered, keyboard-accessible component selectors -->
+            <g class="marker active" data-part="leftSensor" role="button" tabindex="0" aria-label="Select left-side ultrasonic sensor" aria-pressed="true"><circle cx="174" cy="105" r="17"/><text x="174" y="105">01</text></g>
+            <g class="marker" data-part="centerSensor" role="button" tabindex="0" aria-label="Select forward-facing ultrasonic sensor 02" aria-pressed="false"><circle cx="400" cy="82" r="17"/><text x="400" y="82">02</text></g>
+            <g class="marker" data-part="rightSensor" role="button" tabindex="0" aria-label="Select right-side ultrasonic sensor" aria-pressed="false"><circle cx="626" cy="105" r="17"/><text x="626" y="105">03</text></g>
+            <g class="marker" data-part="leftMotor" role="button" tabindex="0" aria-label="Select left vibration motor" aria-pressed="false"><circle cx="92" cy="230" r="17"/><text x="92" y="230">04</text></g>
+            <g class="marker" data-part="rightMotor" role="button" tabindex="0" aria-label="Select right vibration motor" aria-pressed="false"><circle cx="710" cy="230" r="17"/><text x="710" y="230">05</text></g>
+            <g class="marker" data-part="camera" role="button" tabindex="0" aria-label="Select ESP32-CAM below the right-side ultrasonic sensor" aria-pressed="false"><circle cx="597" cy="245" r="17"/><text x="597" y="245">06</text></g>
+          </svg>
+          <div class="map-caption"><span><strong>Tap a marker</strong> to inspect each part</span><span class="map-legend"><i class="legend-dot"></i> Selected component</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="model" id="model" aria-labelledby="model-title">
+      <div class="section-head">
+        <div><p class="section-kicker">02 / Concept model</p><h2 id="model-title">See JARVIS in 3D.</h2></div>
+        <p class="section-note">Drag the model to orbit it. Sensor 02 faces forward; sensors 01 and 03 face outward from the left and right sides.</p>
+      </div>
+      <div class="model-workbench">
+        <div class="model-stage">
+          <div class="model-stage-top"><span>Interactive hardware concept</span><span>Drag to rotate · scroll to explore page</span></div>
+          <canvas class="model-canvas" id="jarvis-model" tabindex="0" aria-label="Interactive 3D concept model of JARVIS glasses. Drag to rotate. Use the front, angle, and side buttons for preset views.">Your browser does not support the interactive 3D canvas.</canvas>
+          <div class="model-controls" role="group" aria-label="3D model view controls">
+            <button class="model-control" data-view="front" aria-pressed="false">Front</button>
+            <button class="model-control" data-view="angle" aria-pressed="true">Angle</button>
+            <button class="model-control" data-view="side" aria-pressed="false">Side</button>
+            <button class="model-control" data-view="reset" aria-pressed="false">Reset</button>
+            <a class="model-download primary" href="JARVIS_Glasses.obj" download>Download 3D model · OBJ</a>
+          </div>
+        </div>
+        <aside class="model-info">
+          <p class="section-kicker">Built from the reference</p>
+          <h3>JARVIS glasses</h3>
+          <p>A refined concept based on the two new photos: a chunky dark frame, one front-facing HC-SR04 above the bridge, and two side-facing sensors. The ESP32-CAM sits on the viewer’s right lens beneath sensor 03.</p>
+          <ul class="model-specs">
+            <li><span>Frame</span><strong>Dark rectangular glasses</strong></li>
+            <li><span>Ultrasonic layout</span><strong>1 front · 2 sides</strong></li>
+            <li><span>Haptics</span><strong>2 × vibration motors</strong></li>
+            <li><span>Camera</span><strong>Right lens · lower mount</strong></li>
+          </ul>
+          <p class="model-file-note">The OBJ uses a matching material file. Keep <a href="JARVIS_Glasses.mtl" download>JARVIS_Glasses.mtl</a> beside it when importing into a 3D editor.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="flow" id="flow" aria-labelledby="flow-title">
+      <div class="section-head">
+        <div><p class="section-kicker">03 / Signal flow</p><h2 id="flow-title">From distance to detail.</h2></div>
+        <p class="section-note">The Nano handles obstacle alerts. The camera is triggered only when the system asks for a closer look.</p>
+      </div>
+      <div class="flow-grid">
+        <article class="flow-card"><span class="flow-num">01</span><h3>Sense what’s ahead</h3><p>Three HC-SR04 sensors send distance readings to the Arduino Nano.</p><span class="flow-detail">Ultrasonic sweep</span></article>
+        <article class="flow-card"><span class="flow-num">02</span><h3>Give a haptic cue</h3><p>When an obstacle is close, the Nano activates the vibration alert and buzzer.</p><span class="flow-detail">Touch, then sound</span></article>
+        <article class="flow-card"><span class="flow-num">03</span><h3>Add a camera label</h3><p>The ESP32-CAM captures an image for the person/furniture classifier; JARVIS Companion is intended to present and speak the result.</p><span class="flow-detail">Triggered recognition</span></article>
+      </div>
+    </section>
+
+    <aside class="note" aria-label="Prototype note"><span class="note-symbol" aria-hidden="true">i</span><p><strong>Prototype note.</strong> This guide shows the intended component roles and overall flow. Recognition can be wrong, and the complete camera-to-phone loop is still an integration milestone. Use the project’s confirmed wiring diagram for assembly; this page is not a pin-by-pin wiring plan.</p></aside>
+  </main>
+
+  <footer class="shell"><span><strong>JARVIS</strong> · Blind navigation glasses</span><span>Companion app · JARVIS Companion</span></footer>
+
+  <script>
+    const parts = {
+      leftSensor: { label: "Side distance sensing", title: "Left-side ultrasonic sensor", copy: "Sensor 01 is mounted on the left side of the frame and points outward to sense obstacles on that side. Its distance reading goes to the Arduino Nano.", meta: "Side-mounted and aimed left, rather than facing forward." },
+      centerSensor: { label: "Forward distance sensing", title: "Forward ultrasonic sensor", copy: "Sensor 02 sits above the bridge and points straight ahead to check the space in front of the wearer.", meta: "The only ultrasonic sensor mounted on the front of the glasses." },
+      rightSensor: { label: "Side distance sensing", title: "Right-side ultrasonic sensor", copy: "Sensor 03 is mounted on the right side of the frame and points outward to sense obstacles on that side. Its reading goes to the Nano.", meta: "The ESP32-CAM sits below this sensor on the viewer-right lens." },
+      leftMotor: { label: "Haptic feedback", title: "Left vibration motor", copy: "A small coin motor turns an electronic alert into a physical cue that can be felt at the left side of the frame.", meta: "Use a motor driver board between the Nano and motor." },
+      rightMotor: { label: "Haptic feedback", title: "Right vibration motor", copy: "A second coin motor provides a physical cue at the right side of the frame as part of the directional alert design.", meta: "Use a motor driver board between the Nano and motor." },
+      camera: { label: "Camera + recognition", title: "ESP32-CAM", copy: "When triggered, the camera board captures an image for the prototype classifier, which currently distinguishes Person and Furniture.", meta: "Mounted on the viewer’s right lens, beneath the right ultrasonic sensor. JARVIS Companion is the planned voice interface." }
+    };
+    const controls = [...document.querySelectorAll("[data-part]")];
+    function selectPart(key) {
+      const part = parts[key];
+      if (!part) return;
+      document.getElementById("detail-label").textContent = part.label;
+      document.getElementById("detail-title").textContent = part.title;
+      document.getElementById("detail-copy").textContent = part.copy;
+      document.getElementById("detail-meta").textContent = part.meta;
+      controls.forEach(control => {
+        const selected = control.dataset.part === key;
+        if (control.classList.contains("marker")) control.classList.toggle("active", selected);
+        else control.setAttribute("aria-pressed", String(selected));
+        if (control.classList.contains("marker")) control.setAttribute("aria-pressed", String(selected));
+      });
+    }
+    controls.forEach(control => {
+      control.addEventListener("click", () => selectPart(control.dataset.part));
+      if (control.classList.contains("marker")) control.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectPart(control.dataset.part); }
+      });
+    });
+
+    // Small offline 3D canvas renderer for the concept model; no library or network needed.
+    const canvas = document.getElementById("jarvis-model");
+    const ctx = canvas && canvas.getContext("2d");
+    if (canvas && ctx) {
+      const faces = [];
+      const palette = {
+        frame: "#172131", lens: "#a9bbcf", bridge: "#263348", metal: "#aeb8c6",
+        rubber: "#4a515c", motor: "#bec8d5", board: "#26394e", rim: "#dce4ee",
+        face: "#8192aa", camera: "#1e3045", glass: "#4b86ef"
+      };
+      function addBox(cx, cy, cz, sx, sy, sz, color, yaw = 0) {
+        const hx=sx/2, hy=sy/2, hz=sz/2, c=Math.cos(yaw), s=Math.sin(yaw);
+        const local=[[-hx,-hy,-hz],[hx,-hy,-hz],[hx,hy,-hz],[-hx,hy,-hz],[-hx,-hy,hz],[hx,-hy,hz],[hx,hy,hz],[-hx,hy,hz]];
+        const pts=local.map(([x,y,z])=>[cx+x*c+z*s,cy+y,cz-x*s+z*c]);
+        [[0,3,2,1],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]].forEach(ids=>faces.push({p:ids.map(i=>pts[i]),color}));
+      }
+      function addCylinder(cx, cy, cz, radius, depth, color, segments=18) {
+        const back=[],front=[];
+        for(let i=0;i<segments;i++){
+          const a=2*Math.PI*i/segments, x=cx+Math.cos(a)*radius, y=cy+Math.sin(a)*radius;
+          back.push([x,y,cz-depth/2]); front.push([x,y,cz+depth/2]);
+        }
+        faces.push({p:back.slice().reverse(),color},{p:front,color});
+        for(let i=0;i<segments;i++){const j=(i+1)%segments;faces.push({p:[back[i],back[j],front[j],front[i]],color});}
+      }
+      function addCylinderX(cx, cy, cz, radius, depth, color, side, segments=18) {
+        const inner=[],outer=[];
+        for(let i=0;i<segments;i++){
+          const a=2*Math.PI*i/segments, y=cy+Math.sin(a)*radius, z=cz+Math.cos(a)*radius;
+          inner.push([cx-side*depth/2,y,z]); outer.push([cx+side*depth/2,y,z]);
+        }
+        faces.push({p:inner.slice().reverse(),color},{p:outer,color});
+        for(let i=0;i<segments;i++){const j=(i+1)%segments;faces.push({p:[inner[i],inner[j],outer[j],outer[i]],color});}
+      }
+      // Tinted lenses and the thick rectangular frame.
+      [-1.32,1.32].forEach((x,i)=>{
+        addBox(x,0,.01,1.98,1.34,.045,"lens");
+        addBox(x,.79,.17,2.28,.22,.25,"frame");
+        addBox(x,-.79,.17,2.28,.22,.25,"frame");
+        [-1,1].forEach(edge=>addBox(x+edge*1.04,0,.17,.22,1.48,.25,"frame"));
+      });
+      addBox(0,.04,.16,.47,.24,.25,"bridge");
+      addBox(-.31,-.16,.01,.13,.34,.23,"rubber"); addBox(.31,-.16,.01,.13,.34,.23,"rubber");
+      [-1,1].forEach(side=>{
+        addBox(side*2.48,.01,.05,.36,.30,.32,"metal");
+        addBox(side*2.63,-.05,-1.68,.20,.25,3.30,"frame",-side*.055);
+        addBox(side*2.67,-.10,-.47,.37,.34,.48,"motor");
+      });
+      // Sensor 02 faces forward from the bridge; 01 and 03 face outward from the sides.
+      addBox(0,.77,.34,.82,.43,.13,"board");
+      [-.19,.19].forEach(dx=>{addCylinder(dx,.77,.44,.15,.11,"rim");addCylinder(dx,.77,.505,.105,.025,"face");});
+      [-1,1].forEach(side=>{
+        addBox(side*2.50,.68,.10,.13,.43,.78,"board");
+        [-.19,.19].forEach(dz=>{addCylinderX(side*2.61,.68,.10+dz,.15,.12,"rim",side);addCylinderX(side*2.68,.68,.10+dz,.105,.025,"face",side);});
+      });
+      // Camera sits on the viewer-right lens beneath side-facing sensor 03.
+      addBox(1.85,.02,.34,.63,.49,.13,"camera");
+      addCylinder(1.85,.02,.445,.135,.13,"rim");
+      addCylinder(1.85,.02,.52,.085,.025,"glass");
+
+      let yaw=-.38, pitch=.20, dragging=false, lastX=0, lastY=0;
+      function hexShade(hex, amount) {
+        const n=parseInt(hex.slice(1),16), r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+        return `rgb(${Math.round(r*amount)},${Math.round(g*amount)},${Math.round(b*amount)})`;
+      }
+      function render() {
+        const rect=canvas.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
+        if(!rect.width||!rect.height)return;
+        const w=Math.round(rect.width*dpr),h=Math.round(rect.height*dpr);
+        if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        const cw=rect.width,ch=rect.height;
+        const bg=ctx.createLinearGradient(0,0,0,ch);bg.addColorStop(0,"#fbfcff");bg.addColorStop(1,"#edf2f8");
+        ctx.clearRect(0,0,cw,ch);ctx.fillStyle=bg;ctx.fillRect(0,0,cw,ch);
+        ctx.strokeStyle="rgba(118,139,170,.10)";ctx.lineWidth=1;
+        for(let y=ch*.76;y<ch;y+=22){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cw,y);ctx.stroke();}
+        ctx.fillStyle="rgba(41,61,92,.12)";ctx.beginPath();ctx.ellipse(cw*.5,ch*.78,cw*.31,12,0,0,Math.PI*2);ctx.fill();
+        const cp=Math.cos(pitch),sp=Math.sin(pitch),cy=Math.cos(yaw),sy=Math.sin(yaw);
+        const transformed=faces.map(face=>{
+          const points=face.p.map(([x,y,z])=>{
+            const rx=x*cy+z*sy, rz=-x*sy+z*cy;
+            return [rx,y*cp-rz*sp,y*sp+rz*cp];
+          });
+          const a=points[0],b=points[1],c=points[2];
+          const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];
+          const nz=ux*vy-uy*vx, nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, norm=Math.hypot(nx,ny,nz)||1;
+          const light=Math.max(0,(nx*.22+ny*.43+nz*.87)/norm), shade=.58+.42*light;
+          const depth=points.reduce((sum,p)=>sum+p[2],0)/points.length;
+          return {points,color:face.color,shade,depth};
+        }).sort((a,b)=>a.depth-b.depth);
+        const scale=Math.min(cw/7.45,ch/4.35)*.94, distance=14;
+        transformed.forEach(face=>{
+          const pts=face.points.map(([x,y,z])=>{
+            const perspective=distance/(distance-z*.72);
+            return [cw/2+x*scale*perspective,ch*.53-y*scale*perspective];
+          });
+          ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();
+          ctx.fillStyle=hexShade(palette[face.color],face.shade);ctx.fill();
+          ctx.strokeStyle="rgba(8,17,30,.26)";ctx.lineWidth=.8;ctx.stroke();
+        });
+      }
+      const views={front:[0,.08],angle:[-.38,.20],side:[1.03,.12],reset:[-.38,.20]};
+      document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>{
+        const view=views[button.dataset.view];if(!view)return;
+        yaw=view[0];pitch=view[1];
+        document.querySelectorAll("[data-view]").forEach(item=>item.setAttribute("aria-pressed",String(item===button)));
+        render();
+      }));
+      canvas.addEventListener("pointerdown",event=>{dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);});
+      canvas.addEventListener("pointermove",event=>{if(!dragging)return;yaw+=(event.clientX-lastX)*.009;pitch=Math.max(-.7,Math.min(.7,pitch+(event.clientY-lastY)*.007));lastX=event.clientX;lastY=event.clientY;render();});
+      canvas.addEventListener("pointerup",()=>{dragging=false;});
+      canvas.addEventListener("pointercancel",()=>{dragging=false;});
+      canvas.addEventListener("keydown",event=>{
+        const step=.10;
+        if(event.key==="ArrowLeft")yaw-=step;else if(event.key==="ArrowRight")yaw+=step;
+        else if(event.key==="ArrowUp")pitch=Math.max(-.7,pitch-step);else if(event.key==="ArrowDown")pitch=Math.min(.7,pitch+step);else return;
+        event.preventDefault();render();
+      });
+      window.addEventListener("resize",render);
+      render();
+    }
+  </script>
+</body>
+</html>
+
