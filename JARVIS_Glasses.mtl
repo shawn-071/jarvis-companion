@@ -1,0 +1,61 @@
+newmtl frame
+Ka 0.035 0.045 0.065
+Kd 0.085 0.105 0.145
+Ks 0.32 0.34 0.38
+Ns 64
+
+newmtl lens
+Ka 0.13 0.18 0.24
+Kd 0.43 0.53 0.65
+Ks 0.65 0.70 0.76
+Ns 80
+d 0.32
+
+newmtl metal
+Ka 0.25 0.28 0.32
+Kd 0.50 0.56 0.63
+Ks 0.8 0.8 0.8
+Ns 90
+
+newmtl rubber
+Ka 0.02 0.02 0.025
+Kd 0.07 0.08 0.10
+Ks 0.05 0.05 0.05
+Ns 8
+
+newmtl motor
+Ka 0.18 0.20 0.24
+Kd 0.43 0.49 0.57
+Ks 0.52 0.56 0.62
+Ns 36
+
+newmtl sensor_board
+Ka 0.025 0.04 0.06
+Kd 0.09 0.14 0.20
+Ks 0.26 0.31 0.37
+Ns 32
+
+newmtl sensor_rim
+Ka 0.22 0.24 0.28
+Kd 0.55 0.60 0.66
+Ks 0.75 0.78 0.82
+Ns 96
+
+newmtl sensor_face
+Ka 0.08 0.11 0.16
+Kd 0.22 0.30 0.40
+Ks 0.60 0.68 0.74
+Ns 70
+
+newmtl camera_board
+Ka 0.025 0.05 0.08
+Kd 0.08 0.18 0.27
+Ks 0.30 0.38 0.44
+Ns 42
+
+newmtl camera_glass
+Ka 0.025 0.07 0.17
+Kd 0.08 0.26 0.55
+Ks 0.85 0.9 1.0
+Ns 110
+
